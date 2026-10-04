@@ -1,0 +1,22 @@
+{
+  "name": "playwright-test-stuff",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.4"
+  },
+
+  "scripts": {
+    "pretest": "tsc --incremental -p tsconfig.json",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.5",
+    "typescript": "^7.0.2"
+  }
+}
