@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="delayed-element">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <div id="claim-area" class="row" style="min-height:3rem">
+      <button type="button" class="claim" disabled>Claim</button>
+      <div class="spinner" aria-label="Loading"></div>
+    </div>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    await Dojo.boot();
+    document.getElementById('task').textContent = 'Wait for the real claim button, then click it.';
+    const area = document.getElementById('claim-area');
+    const timer = setInterval(async () => {
+      const r = await Dojo.action('status');
+      if (!r.ready) return;
+      clearInterval(timer);
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'claim';
+      b.id = Dojo.randomId('claim');
+      b.textContent = r.label;
+      b.addEventListener('click', () => Dojo.solve(r.label));
+      area.replaceChildren(b);
+    }, 700);
+  })();
+</script>
+</body>
+</html>

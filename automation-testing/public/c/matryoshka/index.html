@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="matryoshka">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <iframe id="outer-frame" title="Outer frame" style="height:440px"></iframe>
+    <form id="code-form" class="row" style="margin-top:1rem">
+      <input id="final-code" name="code" placeholder="Final code" autocomplete="off">
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    await Dojo.boot();
+    document.getElementById('task').textContent = 'Dig down to the Reveal button, then submit the code here.';
+    document.getElementById('outer-frame').src = `boss1.html?t=${Dojo.token}`;
+    document.getElementById('code-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      Dojo.solve(e.target.code.value);
+    });
+  })();
+</script>
+</body>
+</html>

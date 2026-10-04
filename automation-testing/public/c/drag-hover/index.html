@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="drag-hover">
+<main>
+  <div id="task"></div>
+  <style>
+    .menubar { display: flex; gap: 1rem; list-style: none; margin: 0; padding: 0; }
+    .menubar li { position: relative; }
+    .menubar > li > span, .sub li > span { display: block; padding: .45rem .9rem; border-radius: 6px; cursor: default; background: var(--bg); border: 1px solid var(--border); }
+    .sub { display: none; position: absolute; left: 0; top: 100%; list-style: none; margin: 0; padding: .3rem; min-width: 170px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; z-index: 10; }
+    .sub .sub { left: 100%; top: 0; }
+    li:hover > .sub { display: block; }
+    .sub li { margin: 2px 0; }
+    .board { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .column { min-height: 140px; padding: .6rem; display: flex; flex-wrap: wrap; align-content: flex-start; gap: .4rem; border: 2px dashed var(--border); border-radius: 10px; }
+    .column.over { border-color: var(--accent); }
+    .column h3 { margin: 0 0 .2rem; font-size: .95rem; flex-basis: 100%; }
+    .task { padding: .4rem .7rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); cursor: grab; }
+  </style>
+  <section id="challenge">
+    <ul class="menubar">
+      <li><span>File</span>
+        <ul class="sub"><li><span>New</span></li><li><span>Open</span></li></ul>
+      </li>
+      <li><span>Tools &#9662;</span>
+        <ul class="sub">
+          <li><span>Settings</span></li>
+          <li><span>Secrets &#9656;</span>
+            <ul class="sub"><li><button type="button" id="reveal-word">Reveal word</button></li></ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p>Secret word: <strong id="secret-word" class="mono">?</strong></p>
+
+    <div class="board">
+      <div class="column" id="backlog"><h3>Backlog</h3></div>
+      <div class="column" id="done"><h3>Done</h3></div>
+    </div>
+    <p><button type="button" id="submit-board">Submit board</button></p>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').innerHTML = `Reveal the secret word, then move these tasks to <strong>Done</strong>: ${d.wanted.map((t) => `<strong>${Dojo.esc(t)}</strong>`).join(', ')}.`;
+
+    document.getElementById('reveal-word').addEventListener('click', async () => {
+      const r = await Dojo.action('word');
+      document.getElementById('secret-word').textContent = r.word;
+    });
+
+    const backlog = document.getElementById('backlog');
+    for (const t of d.tasks) {
+      const el = document.createElement('div');
+      el.className = 'task';
+      el.draggable = true;
+      el.textContent = t;
+      el.id = Dojo.randomId('task');
+      el.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', el.id));
+      backlog.append(el);
+    }
+    for (const col of document.querySelectorAll('.column')) {
+      col.addEventListener('dragover', (e) => { e.preventDefault(); col.classList.add('over'); });
+      col.addEventListener('dragleave', () => col.classList.remove('over'));
+      col.addEventListener('drop', (e) => {
+        e.preventDefault();
+        col.classList.remove('over');
+        const el = document.getElementById(e.dataTransfer.getData('text/plain'));
+        if (el) col.append(el);
+      });
+    }
+
+    document.getElementById('submit-board').addEventListener('click', () => {
+      Dojo.solve({
+        word: document.getElementById('secret-word').textContent,
+        done: [...document.querySelectorAll('#done .task')].map((el) => el.textContent),
+      });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>step1.html</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="frame" data-challenge="iframe-dynamic">
+  <main>
+    <h2 style="margin-top:0">Widget &middot; step 1</h2>
+    <form id="step-form" class="row">
+      <input id="word" name="word" placeholder="Word" autocomplete="off">
+      <button type="submit">Next</button>
+    </form>
+    <div id="error"></div>
+  </main>
+  <script src="/js/common.js"></script>
+  <script>
+    Dojo.attach();
+    document.getElementById('step-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const r = await Dojo.action('step1', { value: e.target.word.value });
+      if (!r.ok) return Dojo.showError(r.message);
+      window.parent.postMessage({ type: 'dyn-next' }, location.origin);
+    });
+  </script>
+</body>
+</html>

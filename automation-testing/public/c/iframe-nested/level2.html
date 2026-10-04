@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>level2.html</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="frame" data-challenge="iframe-nested">
+  <main>
+    <h2 style="margin-top:0">Level 2</h2>
+    <p class="muted">Nothing to see here. Keep digging.</p>
+    <p>Decoy code: <strong class="mono">NOTIT</strong></p>
+    <iframe id="level-3" title="Level 3" style="height:180px"></iframe>
+  </main>
+  <script src="/js/common.js"></script>
+  <script>
+    Dojo.attach();
+    document.getElementById('level-3').src = `level3.html?t=${Dojo.token}`;
+  </script>
+</body>
+</html>

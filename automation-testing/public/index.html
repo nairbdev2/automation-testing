@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="topbar"><span class="brand">Automation Dojo</span><span class="crumb">browser automation practice</span></header>
+  <main>
+    <section class="card">
+      <h1>Automation Dojo</h1>
+      <p class="muted">Each challenge hands out a flag like <code>FLAG{...}</code> when you beat it.
+        Have your script read the flag from the page and submit it here (the form works too).
+        Solving by hand teaches you nothing, so automate it!</p>
+      <div class="progress"><div id="progress-bar"></div></div>
+      <p id="progress-text" class="muted"></p>
+      <form id="flag-form" class="flag-form row">
+        <input id="flag-input" name="flag" placeholder="FLAG{...}" autocomplete="off" aria-label="Flag">
+        <button id="flag-submit" type="submit">Submit flag</button>
+      </form>
+      <p id="flag-status" role="status"></p>
+    </section>
+
+    <div id="tiers"></div>
+
+    <p style="margin-top:2rem"><button id="reset" class="secondary" type="button">Reset progress</button></p>
+  </main>
+
+  <script>
+    const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+
+    async function render() {
+      const { tiers, challenges } = await (await fetch('/api/challenges')).json();
+      const solved = challenges.filter((c) => c.solved).length;
+      document.getElementById('progress-bar').style.width = `${(solved / challenges.length) * 100}%`;
+      document.getElementById('progress-text').textContent = `${solved} / ${challenges.length} solved`;
+
+      document.getElementById('tiers').innerHTML = Object.entries(tiers).map(([tier, name]) => `
+        <h2>Tier ${tier} · ${esc(name)}</h2>
+        <div class="grid">
+          ${challenges.filter((c) => String(c.tier) === tier).map((c) => `
+            <article class="card ${c.solved ? 'solved' : ''}" data-id="${c.id}">
+              <h3><a href="${c.path}">${esc(c.title)}</a>${c.solved ? '<span class="badge">solved</span>' : ''}</h3>
+              <p>${esc(c.objective)}</p>
+              <details class="hints"><summary>Hints</summary><ol>${c.hints.map((h) => `<li>${esc(h)}</li>`).join('')}</ol></details>
+            </article>`).join('')}
+        </div>`).join('');
+    }
+
+    document.getElementById('flag-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('flag-input');
+      const status = document.getElementById('flag-status');
+      const r = await (await fetch('/api/flags', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ flag: input.value }),
+      })).json();
+      status.className = r.ok ? 'ok' : 'err';
+      status.textContent = r.ok ? `${r.already ? 'Already solved' : 'Correct'}: ${r.title}` : r.message;
+      if (r.ok) input.value = '';
+      render();
+    });
+
+    document.getElementById('reset').addEventListener('click', async () => {
+      if (!confirm('Reset all progress?')) return;
+      await fetch('/api/reset', { method: 'POST' });
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

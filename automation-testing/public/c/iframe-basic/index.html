@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="iframe-basic">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <iframe id="form-frame" title="Form frame" style="height:200px"></iframe>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').innerHTML = `Type <strong>${Dojo.esc(d.name)}</strong> into the form inside the iframe and submit it.`;
+    document.getElementById('form-frame').src = `frame.html?t=${Dojo.token}`;
+  })();
+</script>
+</body>
+</html>

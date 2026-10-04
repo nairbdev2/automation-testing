@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="infinite-scroll">
+<main>
+  <div id="task"></div>
+  <style>
+    #feed { height: 420px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: .5rem; }
+    .item { display: flex; justify-content: space-between; align-items: center; padding: .55rem .7rem; border-bottom: 1px solid var(--border); }
+    .item .n { color: var(--muted); width: 3rem; }
+    #sentinel { padding: .8rem; text-align: center; color: var(--muted); }
+  </style>
+  <section id="challenge">
+    <div id="feed">
+      <div id="items"></div>
+      <div id="sentinel">Loading more&hellip;</div>
+    </div>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').innerHTML = `Find <strong class="mono">${d.target}</strong> in the feed and press its Select button.`;
+    const list = document.getElementById('items');
+    const sentinel = document.getElementById('sentinel');
+    let offset = 0, loading = false, done = false;
+
+    async function more() {
+      if (loading || done) return;
+      loading = true;
+      const r = await Dojo.action('items', { offset });
+      for (const it of r.items) {
+        const row = document.createElement('div');
+        row.className = 'item';
+        row.innerHTML = `<span class="n">#${it.n}</span><span class="code mono" style="flex:1">${it.code}</span><button type="button" class="secondary">Select</button>`;
+        row.querySelector('button').addEventListener('click', () => Dojo.solve(it.code));
+        list.append(row);
+      }
+      offset += r.items.length;
+      done = !r.hasMore;
+      if (done) sentinel.textContent = 'End of feed.';
+      loading = false;
+      // Keep loading if the sentinel is still on screen.
+      const box = sentinel.getBoundingClientRect(), feed = document.getElementById('feed').getBoundingClientRect();
+      if (!done && box.top < feed.bottom) more();
+    }
+    new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) more();
+    }, { root: document.getElementById('feed') }).observe(sentinel);
+  })();
+</script>
+</body>
+</html>

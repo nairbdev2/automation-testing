@@ -1,0 +1,16 @@
+{
+  "name": "automation-dojo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Practice playground for browser automation: waits, iframes, shadow DOM and more.",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

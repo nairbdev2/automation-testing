@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>step2.html</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="frame" data-challenge="iframe-dynamic">
+  <main>
+    <h2 style="margin-top:0">Widget &middot; step 2</h2>
+    <div id="confirm-area"><p class="muted">Preparing&hellip;</p></div>
+    <div id="error"></div>
+  </main>
+  <script src="/js/common.js"></script>
+  <script>
+    Dojo.attach();
+    setTimeout(() => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = 'Confirm';
+      b.addEventListener('click', () => Dojo.solve('confirm'));
+      document.getElementById('confirm-area').replaceChildren(b);
+    }, 1000 + Math.random() * 1000);
+  </script>
+</body>
+</html>

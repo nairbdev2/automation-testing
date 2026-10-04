@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="dynamic-ids">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <button type="button" class="decoy" style="display:none"></button>
+    <div id="grid" class="row"></div>
+    <p class="muted" style="margin-top:1rem">The grid shuffles every 4 seconds.</p>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').innerHTML = `Click the button labeled <strong>${Dojo.esc(d.target)}</strong>.`;
+    const decoy = document.querySelector('.decoy');
+    decoy.textContent = d.target;
+    decoy.className = Dojo.randomId('c');
+    decoy.addEventListener('click', () => Dojo.solve('decoy'));
+
+    const grid = document.getElementById('grid');
+    function render() {
+      const labels = [...d.labels].sort(() => Math.random() - 0.5);
+      grid.replaceChildren(...labels.map((label) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.id = Dojo.randomId('btn');
+        b.className = `${Dojo.randomId('c')} ${Dojo.randomId('c')}`;
+        b.textContent = label;
+        b.addEventListener('click', () => Dojo.solve(label));
+        return b;
+      }));
+    }
+    render();
+    setInterval(render, 4000);
+  })();
+</script>
+</body>
+</html>

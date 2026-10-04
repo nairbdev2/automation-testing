@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="shadow-nested">
+<main>
+  <div id="task"></div>
+  <section id="challenge"></section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  const css = `<style>
+          :host { display: block; border: 2px solid var(--accent); border-radius: 10px; padding: 1rem; margin-top: .6rem; }
+          input { font: inherit; padding: .4rem .6rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
+          button { font: inherit; cursor: pointer; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-text); padding: .45rem .95rem; border-radius: 8px; }
+          .tag { font-size: .8rem; color: var(--muted); }</style>`;
+  customElements.define('dojo-outer', class extends HTMLElement {
+    connectedCallback() {
+      this.attachShadow({ mode: 'open' }).innerHTML = `${css}
+        <div class="tag">outer #shadow-root</div>
+        <p><slot name="hint">(no hint slotted)</slot></p>
+        <dojo-middle part1="${this.getAttribute('part1')}"></dojo-middle>`;
+    }
+  });
+  customElements.define('dojo-middle', class extends HTMLElement {
+    connectedCallback() {
+      this.attachShadow({ mode: 'open' }).innerHTML = `${css}
+        <div class="tag">middle #shadow-root</div>
+        <p>Part 1: <strong class="part1">${this.getAttribute('part1')}</strong></p>
+        <dojo-inner></dojo-inner>`;
+      this.removeAttribute('part1');
+    }
+  });
+  customElements.define('dojo-inner', class extends HTMLElement {
+    connectedCallback() {
+      const root = this.attachShadow({ mode: 'open' });
+      root.innerHTML = `${css}
+        <div class="tag">inner #shadow-root</div>
+        <input id="passphrase" placeholder="PART1-PART2" autocomplete="off">
+        <button type="button" id="submit">Submit</button>`;
+      root.getElementById('submit').addEventListener('click', () => Dojo.solve(root.getElementById('passphrase').value));
+    }
+  });
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').textContent = 'Build the passphrase PART1-PART2 and submit it in the innermost layer.';
+    const outer = document.createElement('dojo-outer');
+    outer.setAttribute('part1', d.part1);
+    outer.innerHTML = `<span slot="hint">Part 2: <strong class="part2">${d.part2}</strong></span>`;
+    document.getElementById('challenge').append(outer);
+    outer.removeAttribute('part1');
+  })();
+</script>
+</body>
+</html>

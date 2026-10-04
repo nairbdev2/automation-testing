@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>level1.html</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="frame" data-challenge="iframe-nested">
+  <main>
+    <h2 style="margin-top:0">Level 1</h2>
+    <form id="code-form" class="row">
+      <input id="code" name="code" placeholder="Code from level 3" autocomplete="off">
+      <button type="submit">Submit code</button>
+    </form>
+    <div id="error"></div>
+    <iframe id="level-2" title="Level 2" style="height:380px; margin-top:.5rem"></iframe>
+  </main>
+  <script src="/js/common.js"></script>
+  <script>
+    Dojo.attach();
+    document.getElementById('level-2').src = `level2.html?t=${Dojo.token}`;
+    document.getElementById('code-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      Dojo.solve(e.target.code.value);
+    });
+  </script>
+</body>
+</html>

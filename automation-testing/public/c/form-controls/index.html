@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="form-controls">
+<main>
+  <div id="task"></div>
+  <style>
+    .custom-select { position: relative; width: 220px; user-select: none; }
+    .cs-current { border: 1px solid var(--border); border-radius: 8px; padding: .4rem .6rem; cursor: pointer; background: var(--bg); }
+    .cs-current::after { content: " \25BE"; float: right; }
+    .cs-options { position: absolute; left: 0; right: 0; top: 100%; z-index: 5; margin-top: 2px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; display: none; }
+    .custom-select.open .cs-options { display: block; }
+    .cs-option { padding: .35rem .6rem; cursor: pointer; }
+    .cs-option:hover { background: var(--bg); }
+    #wanted td:first-child { color: var(--muted); width: 140px; }
+  </style>
+  <section id="challenge">
+    <form id="settings-form">
+      <label for="country">Country</label>
+      <select id="country" name="country">
+        <option value="">-- choose --</option>
+        <option value="br">Brazil</option><option value="ca">Canada</option><option value="in">India</option>
+        <option value="jp">Japan</option><option value="ke">Kenya</option><option value="no">Norway</option>
+      </select>
+
+      <label>Plan</label>
+      <div class="row">
+        <label style="font-weight:400; margin:0"><input type="radio" name="plan" value="free"> Free</label>
+        <label style="font-weight:400; margin:0"><input type="radio" name="plan" value="pro"> Pro</label>
+        <label style="font-weight:400; margin:0"><input type="radio" name="plan" value="enterprise"> Enterprise</label>
+      </div>
+
+      <label style="font-weight:400"><input type="checkbox" name="newsletter" id="newsletter" checked> Send me the newsletter</label>
+
+      <label for="start-date">Start date</label>
+      <input type="date" id="start-date" name="date">
+
+      <label for="volume">Volume: <output id="volume-out">50</output></label>
+      <input type="range" id="volume" name="volume" min="0" max="100" step="10" value="50">
+
+      <label>Favorite color</label>
+      <div class="custom-select" id="color-picker">
+        <div class="cs-current">Choose a color</div>
+        <div class="cs-options">
+          <div class="cs-option">Crimson</div><div class="cs-option">Teal</div><div class="cs-option">Amber</div>
+          <div class="cs-option">Indigo</div><div class="cs-option">Olive</div>
+        </div>
+      </div>
+
+      <p style="margin-top:1.2rem"><button type="submit">Save settings</button></p>
+    </form>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').innerHTML = `Set the form to these values:
+      <table id="wanted">
+        <tr><td>Country</td><td>${d.countryName}</td></tr>
+        <tr><td>Plan</td><td>${d.plan[0].toUpperCase() + d.plan.slice(1)}</td></tr>
+        <tr><td>Newsletter</td><td>${d.newsletter ? 'subscribed' : 'NOT subscribed'}</td></tr>
+        <tr><td>Start date</td><td>${d.date}</td></tr>
+        <tr><td>Volume</td><td>${d.volume}</td></tr>
+        <tr><td>Favorite color</td><td>${d.color}</td></tr>
+      </table>`;
+
+    const volume = document.getElementById('volume');
+    volume.addEventListener('input', () => { document.getElementById('volume-out').textContent = volume.value; });
+
+    const picker = document.getElementById('color-picker');
+    let color = null;
+    picker.querySelector('.cs-current').addEventListener('click', () => picker.classList.toggle('open'));
+    picker.querySelectorAll('.cs-option').forEach((opt) => opt.addEventListener('click', () => {
+      color = opt.textContent;
+      picker.querySelector('.cs-current').textContent = color;
+      picker.classList.remove('open');
+    }));
+    document.addEventListener('click', (e) => { if (!picker.contains(e.target)) picker.classList.remove('open'); });
+
+    document.getElementById('settings-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = e.target;
+      Dojo.solve({
+        country: f.country.value,
+        plan: f.plan.value,
+        newsletter: f.newsletter.checked,
+        date: f.date.value,
+        volume: Number(volume.value),
+        color,
+      });
+    });
+  })();
+</script>
+</body>
+</html>

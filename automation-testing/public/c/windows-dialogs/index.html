@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="windows-dialogs">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <p><a id="vault-link" target="_blank" rel="opener">Open the vault &nearr;</a></p>
+    <p><button type="button" id="begin">Begin</button></p>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    await Dojo.boot();
+    document.getElementById('task').textContent = 'Get the code from the vault tab, then press Begin and get through the dialogs.';
+    document.getElementById('vault-link').href = `popup.html?t=${Dojo.token}`;
+    document.getElementById('begin').addEventListener('click', async () => {
+      if (!confirm('Proceed with the vault check?')) return Dojo.showError('Cancelled. Accept the confirm dialog to continue.');
+      const code = prompt('Enter the vault code');
+      if (code === null) return Dojo.showError('Prompt dismissed.');
+      const r = await Dojo.solve(code);
+      alert(r.ok ? 'Vault accepted!' : 'Vault rejected.');
+    });
+  })();
+</script>
+</body>
+</html>

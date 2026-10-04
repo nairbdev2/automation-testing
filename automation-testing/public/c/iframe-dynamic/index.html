@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="iframe-dynamic">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <div id="widget-slot"><p class="muted">Loading widget&hellip;</p></div>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').innerHTML = `Type <strong>${Dojo.esc(d.word)}</strong> in the widget, press Next, then press Confirm in the new widget.`;
+    const slot = document.getElementById('widget-slot');
+
+    function mount(file) {
+      const f = document.createElement('iframe');
+      f.id = Dojo.randomId('widget');
+      f.name = Dojo.randomId('w');
+      f.title = 'Widget';
+      f.style.height = '180px';
+      f.src = `${file}?t=${Dojo.token}`;
+      slot.replaceChildren(f);
+    }
+
+    setTimeout(() => mount('step1.html'), 1500 + Math.random() * 2500);
+    window.addEventListener('message', (e) => {
+      if (e.origin !== location.origin || e.data?.type !== 'dyn-next') return;
+      slot.innerHTML = '<p class="muted">Reloading widget&hellip;</p>';
+      setTimeout(() => mount('step2.html'), 800 + Math.random() * 1000);
+    });
+  })();
+</script>
+</body>
+</html>

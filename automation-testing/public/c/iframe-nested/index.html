@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="iframe-nested">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <iframe id="level-1" title="Level 1" style="height:560px"></iframe>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    await Dojo.boot();
+    document.getElementById('task').textContent = 'Read the code in level 3 and submit it in level 1.';
+    document.getElementById('level-1').src = `level1.html?t=${Dojo.token}`;
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="upload-download">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <p><a id="download" class="btn" download>Download key file</a></p>
+    <form id="upload-form" class="row">
+      <input type="file" id="upload" name="file" accept=".txt,text/plain">
+      <button type="submit">Upload</button>
+    </form>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    await Dojo.boot();
+    document.getElementById('task').textContent = 'Download the key file, then upload answer.txt containing only the key.';
+    document.getElementById('download').href = Dojo.actionUrl('file');
+    document.getElementById('upload-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = document.getElementById('upload').files[0];
+      if (!file) return Dojo.showError('Choose a file first.');
+      Dojo.solve({ name: file.name, content: await file.text() });
+    });
+  })();
+</script>
+</body>
+</html>

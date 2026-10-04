@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>level3.html</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="frame" data-challenge="iframe-nested">
+  <main>
+    <h2 style="margin-top:0">Level 3</h2>
+    <p>Secret code: <strong id="secret" class="mono"></strong></p>
+    <div id="error"></div>
+  </main>
+  <script src="/js/common.js"></script>
+  <script>
+    Dojo.attach().action('peek').then((r) => {
+      document.getElementById('secret').textContent = r.code;
+    });
+  </script>
+</body>
+</html>

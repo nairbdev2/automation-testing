@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="login">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <div class="row" style="align-items:flex-start; gap:2rem">
+      <form id="login-form" style="flex:1; min-width:240px">
+        <label for="username">Username</label>
+        <input id="username" name="username" placeholder="Username" autocomplete="off">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="Password">
+        <p><button type="submit">Sign in</button></p>
+      </form>
+      <aside class="sticky-note" aria-label="Sticky note"
+        style="background:var(--note); padding:1rem 1.2rem; transform:rotate(2deg); box-shadow:2px 3px 8px rgba(0,0,0,.2); font-family:'Comic Sans MS', cursive">
+        <div>don't forget!!</div>
+        <div>user: <span class="note-user"></span></div>
+        <div>pass: <span class="note-pass"></span></div>
+      </aside>
+    </div>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').textContent = 'Sign in using the credentials on the sticky note.';
+    document.querySelector('.note-user').textContent = d.username;
+    document.querySelector('.note-pass').textContent = d.password;
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      Dojo.solve({ username: e.target.username.value, password: e.target.password.value });
+    });
+  })();
+</script>
+</body>
+</html>

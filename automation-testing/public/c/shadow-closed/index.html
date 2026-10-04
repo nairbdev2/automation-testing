@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="shadow-closed">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <p>Vault code: <code id="vault-code"></code></p>
+    <dojo-vault></dojo-vault>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  customElements.define('dojo-vault', class extends HTMLElement {
+    constructor() {
+      super();
+      const root = this.attachShadow({ mode: 'closed' });
+      root.innerHTML = `<style>
+          :host { display: block; border: 2px solid var(--accent); border-radius: 10px; padding: 1rem; margin-top: .6rem; }
+          input { font: inherit; padding: .4rem .6rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
+          button { font: inherit; cursor: pointer; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-text); padding: .45rem .95rem; border-radius: 8px; }
+          .tag { font-size: .8rem; color: var(--muted); }
+          :host { max-width: 360px; }</style>
+        <div class="tag">#shadow-root (closed)</div>
+        <form>
+          <input name="code" placeholder="Vault code" autocomplete="off">
+          <button type="submit">Unlock</button>
+        </form>`;
+      root.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        Dojo.solve(e.target.code.value);
+      });
+    }
+  });
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').textContent = 'Type the vault code into the vault input and unlock it.';
+    document.getElementById('vault-code').textContent = d.code;
+  })();
+</script>
+</body>
+</html>

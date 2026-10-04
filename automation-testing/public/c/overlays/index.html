@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="overlays">
+<main>
+  <div id="task"></div>
+  <style>
+    .overlay { position: fixed; inset: 0; background: rgba(10, 12, 20, .65); display: flex; align-items: center; justify-content: center; z-index: 100; }
+    .overlay .dialog { background: var(--surface); color: var(--text); padding: 1.4rem; border-radius: 12px; max-width: 420px; position: relative; }
+    .close-x { position: absolute; top: .4rem; right: .5rem; background: none; border: none; color: var(--muted); font-size: 1.4rem; padding: .1rem .5rem; }
+    #arena { position: relative; height: 320px; border: 1px dashed var(--border); border-radius: 8px; }
+    #continue { position: absolute; left: 40%; top: 45%; transition: none; }
+  </style>
+  <section id="challenge">
+    <div id="arena"><button type="button" id="continue">Continue</button></div>
+  </section>
+
+  <div class="overlay" id="cookie-wall">
+    <div class="dialog" role="dialog" aria-label="Cookie consent">
+      <h2 style="margin-top:0">We value your cookies</h2>
+      <p>This dojo uses cookies to make your scripts' life harder.</p>
+      <div class="row">
+        <button type="button" class="secondary" data-act="reject">Reject</button>
+        <button type="button" data-act="accept">Accept all</button>
+      </div>
+      <p class="cookie-msg muted"></p>
+    </div>
+  </div>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    await Dojo.boot();
+    document.getElementById('task').textContent = 'Accept cookies, close the newsletter popup, then click Continue.';
+    const wall = document.getElementById('cookie-wall');
+    wall.querySelector('[data-act=reject]').addEventListener('click', () => {
+      wall.querySelector('.cookie-msg').textContent = 'Sorry, the dojo does not work without cookies.';
+    });
+    wall.querySelector('[data-act=accept]').addEventListener('click', async () => {
+      await Dojo.action('cookies');
+      wall.remove();
+      setTimeout(showModal, 1000 + Math.random() * 1500);
+    });
+
+    function showModal() {
+      const m = document.createElement('div');
+      m.className = 'overlay';
+      m.id = Dojo.randomId('modal');
+      m.innerHTML = `<div class="dialog" role="dialog" aria-label="Newsletter">
+        <button type="button" class="close-x" aria-label="Close">&times;</button>
+        <h2 style="margin-top:0">Wait! Before you go&hellip;</h2>
+        <p>Join 0 other automation fans on our newsletter.</p>
+        <div class="row"><input placeholder="you@example.com"><button type="button" class="subscribe">Subscribe</button></div>
+        <p class="muted sub-msg"></p></div>`;
+      m.querySelector('.subscribe').addEventListener('click', () => {
+        m.querySelector('.sub-msg').textContent = 'Subscribing does not close this. Find the close button.';
+      });
+      m.querySelector('.close-x').addEventListener('click', async () => {
+        await Dojo.action('modal');
+        m.remove();
+      });
+      document.body.append(m);
+    }
+
+    const btn = document.getElementById('continue');
+    let moved = false;
+    btn.addEventListener('mouseenter', () => {
+      if (moved) return;
+      moved = true;
+      btn.style.left = `${5 + Math.random() * 70}%`;
+      btn.style.top = `${5 + Math.random() * 75}%`;
+    });
+    btn.addEventListener('click', () => Dojo.solve('continue'));
+  })();
+</script>
+</body>
+</html>

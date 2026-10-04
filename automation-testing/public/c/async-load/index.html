@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="async-load">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <div class="row">
+      <button type="button" id="generate">Generate report</button>
+      <div class="spinner" id="spinner" hidden></div>
+    </div>
+    <p>Report code: <strong id="report" class="mono"></strong></p>
+    <form id="answer-form" class="row">
+      <input id="report-code" name="code" placeholder="Report code" autocomplete="off">
+      <button type="submit">Submit code</button>
+    </form>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    await Dojo.boot();
+    document.getElementById('task').textContent = 'Generate the report, wait for it, then submit its code.';
+    const btn = document.getElementById('generate');
+    const spinner = document.getElementById('spinner');
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      spinner.hidden = false;
+      document.getElementById('report').textContent = '';
+      const r = await Dojo.action('report');
+      spinner.hidden = true;
+      btn.disabled = false;
+      document.getElementById('report').textContent = r.code;
+    });
+    document.getElementById('answer-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      Dojo.solve(e.target.code.value);
+    });
+  })();
+</script>
+</body>
+</html>

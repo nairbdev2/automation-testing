@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Foreign Embassy</title>
+  <style>
+    body { margin: 0; padding: 1rem; font: 15px/1.5 system-ui, sans-serif; background: #fdf3e7; color: #3b2a14; }
+    button { font: inherit; padding: .45rem .95rem; border-radius: 8px; border: 1px solid #b45309; background: #b45309; color: #fff; cursor: pointer; }
+    code { font-size: 1.2rem; font-weight: 700; }
+    .origin { font-size: .8rem; opacity: .7; }
+  </style>
+</head>
+<body>
+  <h2 style="margin-top:0">Foreign Embassy</h2>
+  <p class="origin">You are on a different origin: <span id="origin"></span></p>
+  <button type="button" id="reveal">Reveal code</button>
+  <p>Code: <code id="code-display">&bull;&bull;&bull;&bull;&bull;&bull;&bull;</code></p>
+  <script>
+    const p = new URLSearchParams(location.search);
+    document.getElementById('origin').textContent = location.origin;
+    document.getElementById('reveal').addEventListener('click', async () => {
+      const r = await (await fetch(`/api/peek/${encodeURIComponent(p.get('id'))}/${encodeURIComponent(p.get('t'))}`)).json();
+      document.getElementById('code-display').textContent = r.code || r.error;
+      if (r.code) window.parent.postMessage({ type: 'xo-revealed' }, '*');
+    });
+  </script>
+</body>
+</html>

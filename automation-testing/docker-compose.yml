@@ -1,0 +1,14 @@
+services:
+  dojo:
+    build: .
+    image: automation-dojo
+    container_name: automation-dojo
+    ports:
+      - "3000:3000"   # main app
+      - "3001:3001"   # "foreign" origin for the cross-origin iframe challenges
+    volumes:
+      - dojo-data:/app/data   # progress + flag secret survive restarts
+    restart: unless-stopped
+
+volumes:
+  dojo-data:

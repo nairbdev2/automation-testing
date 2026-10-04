@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="shadow-open">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <p>Unlock code: <code id="unlock-code"></code></p>
+    <dojo-codebox></dojo-codebox>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  customElements.define('dojo-codebox', class extends HTMLElement {
+    connectedCallback() {
+      const root = this.attachShadow({ mode: 'open' });
+      root.innerHTML = `<style>
+          :host { display: block; border: 2px solid var(--accent); border-radius: 10px; padding: 1rem; margin-top: .6rem; }
+          input { font: inherit; padding: .4rem .6rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
+          button { font: inherit; cursor: pointer; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-text); padding: .45rem .95rem; border-radius: 8px; }
+          .tag { font-size: .8rem; color: var(--muted); }</style>
+        <div class="tag">#shadow-root (open)</div>
+        <label for="code">Code</label>
+        <input id="code" placeholder="Enter code" autocomplete="off">
+        <button type="button" id="unlock">Unlock</button>`;
+      root.getElementById('unlock').addEventListener('click', () => Dojo.solve(root.getElementById('code').value));
+    }
+  });
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').textContent = 'Enter the unlock code in the box (inside an open shadow root).';
+    document.getElementById('unlock-code').textContent = d.code;
+  })();
+</script>
+</body>
+</html>

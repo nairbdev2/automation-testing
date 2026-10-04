@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="table-scrape">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <table id="data-table">
+      <thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Amount</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div class="row" style="margin-top:.8rem">
+      <button type="button" id="prev" class="secondary">&larr; Prev</button>
+      <span id="page-info" class="muted"></span>
+      <button type="button" id="next" class="secondary">Next &rarr;</button>
+    </div>
+    <form id="answer-form" class="row" style="margin-top:1.2rem">
+      <label for="total" style="margin:0">Total</label>
+      <input id="total" name="total" placeholder="e.g. 12345" autocomplete="off">
+      <button type="submit">Submit total</button>
+    </form>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    const d = await Dojo.boot();
+    document.getElementById('task').innerHTML =
+      `Sum the <em>Amount</em> of every <strong>${Dojo.esc(d.targetDept)}</strong> row across all ${d.pages} pages (${d.totalRows} rows).`;
+    const tbody = document.querySelector('#data-table tbody');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const info = document.getElementById('page-info');
+    let page = 1;
+
+    async function load(p) {
+      prev.disabled = next.disabled = true;
+      tbody.innerHTML = '<tr><td colspan="4" class="muted">Loading&hellip;</td></tr>';
+      const r = await Dojo.action('page', { page: p });
+      page = r.page;
+      tbody.innerHTML = r.rows.map((row) => `<tr data-row="${row.id}"><td>${row.id}</td><td>${Dojo.esc(row.name)}</td><td>${row.dept}</td><td>$${row.amount.toLocaleString('en-US')}</td></tr>`).join('');
+      info.textContent = `Page ${r.page} of ${r.pages}`;
+      prev.disabled = r.page <= 1;
+      next.disabled = r.page >= r.pages;
+    }
+    prev.addEventListener('click', () => load(page - 1));
+    next.addEventListener('click', () => load(page + 1));
+    document.getElementById('answer-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      Dojo.solve(e.target.total.value);
+    });
+    load(1);
+  })();
+</script>
+</body>
+</html>

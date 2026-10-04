@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>popup.html</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="windows-dialogs">
+  <main style="max-width:480px; margin:3rem auto; text-align:center">
+    <h1>The Vault</h1>
+    <p>Vault code:</p>
+    <p><code id="vault-code" style="font-size:1.6rem"></code></p>
+    <p class="muted">Close this tab and head back.</p>
+    <div id="error"></div>
+  </main>
+  <script src="/js/common.js"></script>
+  <script>
+    Dojo.attach().action('popup').then((r) => {
+      document.getElementById('vault-code').textContent = r.code;
+    });
+  </script>
+</body>
+</html>

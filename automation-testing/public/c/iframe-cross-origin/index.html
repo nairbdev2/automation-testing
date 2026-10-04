@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automation Dojo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-challenge="iframe-cross-origin">
+<main>
+  <div id="task"></div>
+  <section id="challenge">
+    <iframe id="embassy" title="Foreign embassy" style="height:220px"></iframe>
+    <form id="code-form" class="row" style="margin-top:1rem">
+      <input id="code" name="code" placeholder="Code from the embassy" autocomplete="off" disabled>
+      <button type="submit" disabled>Submit code</button>
+    </form>
+  </section>
+</main>
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    await Dojo.boot();
+    document.getElementById('task').textContent = 'Reveal the code inside the cross-origin frame, then submit it here.';
+    const origin = await Dojo.foreignOrigin();
+    document.getElementById('embassy').src = `${origin}/xo.html?id=${Dojo.id}&t=${Dojo.token}`;
+    const form = document.getElementById('code-form');
+    window.addEventListener('message', (e) => {
+      if (e.origin !== origin || e.data?.type !== 'xo-revealed') return;
+      form.querySelectorAll('input, button').forEach((el) => { el.disabled = false; });
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      Dojo.solve(e.target.code.value);
+    });
+  })();
+</script>
+</body>
+</html>
