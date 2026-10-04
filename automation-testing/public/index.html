@@ -15,7 +15,15 @@
         Have your script read the flag from the page and submit it here (the form works too).
         Solving by hand teaches you nothing, so automate it!</p>
       <div class="progress"><div id="progress-bar"></div></div>
-      <p id="progress-text" class="muted"></p>
+      <div class="row progress-row">
+        <p id="progress-text" class="muted"></p>
+        <button id="reset" class="secondary" type="button">Reset progress</button>
+        <span id="reset-ask" class="row" hidden>
+          <span class="muted">Reset all progress?</span>
+          <button id="reset-confirm" class="danger" type="button">Yes, reset</button>
+          <button id="reset-cancel" class="secondary" type="button">Cancel</button>
+        </span>
+      </div>
       <form id="flag-form" class="flag-form row">
         <input id="flag-input" name="flag" placeholder="FLAG{...}" autocomplete="off" aria-label="Flag">
         <button id="flag-submit" type="submit">Submit flag</button>
@@ -24,8 +32,6 @@
     </section>
 
     <div id="tiers"></div>
-
-    <p style="margin-top:2rem"><button id="reset" class="secondary" type="button">Reset progress</button></p>
   </main>
 
   <script>
@@ -44,27 +50,53 @@
             <article class="card ${c.solved ? 'solved' : ''}" data-id="${c.id}">
               <h3><a href="${c.path}">${esc(c.title)}</a>${c.solved ? '<span class="badge">solved</span>' : ''}</h3>
               <p>${esc(c.objective)}</p>
-              <details class="hints"><summary>Hints</summary><ol>${c.hints.map((h) => `<li>${esc(h)}</li>`).join('')}</ol></details>
+              <div class="card-foot">
+                <details class="hints"><summary>Hints</summary><ol>${c.hints.map((h) => `<li>${esc(h)}</li>`).join('')}</ol></details>
+                ${c.solved ? `<button id="reset-${c.id}" class="secondary reset-one" type="button" aria-label="Reset ${esc(c.title)}">Reset</button>` : ''}
+              </div>
             </article>`).join('')}
         </div>`).join('');
+    }
+
+    function setStatus(ok, text) {
+      const status = document.getElementById('flag-status');
+      status.className = ok ? 'ok' : 'err';
+      status.textContent = text;
     }
 
     document.getElementById('flag-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const input = document.getElementById('flag-input');
-      const status = document.getElementById('flag-status');
       const r = await (await fetch('/api/flags', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ flag: input.value }),
       })).json();
-      status.className = r.ok ? 'ok' : 'err';
-      status.textContent = r.ok ? `${r.already ? 'Already solved' : 'Correct'}: ${r.title}` : r.message;
+      setStatus(r.ok, r.ok ? `${r.already ? 'Already solved' : 'Correct'}: ${r.title}` : r.message);
       if (r.ok) input.value = '';
       render();
     });
 
-    document.getElementById('reset').addEventListener('click', async () => {
-      if (!confirm('Reset all progress?')) return;
-      await fetch('/api/reset', { method: 'POST' });
+    const resetBtn = document.getElementById('reset');
+    const resetAsk = document.getElementById('reset-ask');
+    function askReset(on) {
+      resetBtn.hidden = on;
+      resetAsk.hidden = !on;
+      (on ? document.getElementById('reset-cancel') : resetBtn).focus();
+    }
+    resetBtn.addEventListener('click', () => askReset(true));
+    document.getElementById('reset-cancel').addEventListener('click', () => askReset(false));
+    document.getElementById('reset-confirm').addEventListener('click', async () => {
+      const r = await (await fetch('/api/reset', { method: 'POST' })).json();
+      askReset(false);
+      setStatus(r.ok, r.ok ? 'Progress reset.' : 'Reset failed.');
+      render();
+    });
+
+    // #tiers is re-rendered via innerHTML, so delegate clicks.
+    document.getElementById('tiers').addEventListener('click', async (e) => {
+      const btn = e.target.closest('.reset-one');
+      if (!btn) return;
+      const r = await (await fetch(`/api/reset/${btn.closest('[data-id]').dataset.id}`, { method: 'POST' })).json();
+      setStatus(r.ok, r.ok ? `Progress reset: ${r.title}` : r.error);
       render();
     });
 

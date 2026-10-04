@@ -74,7 +74,9 @@ Every challenge has hints on its page and on the dashboard. Try it without them 
 
 ## Housekeeping
 
-- Progress and the flag secret are stored in `data/` (a Docker volume called `dojo-data` when you use Compose).
-- "Reset progress" at the bottom of the dashboard clears your solved list.
+- Progress and the flag secret are stored in `data/` (a Docker volume called `automation-dojo_dojo-data` when you use Compose).
+- "Reset progress" next to the progress bar clears your whole solved list (it asks you to confirm on the page,
+  not in a browser dialog). Each solved card also has its own "Reset" button. From a script, use
+  `POST /api/reset` or `POST /api/reset/<id>`.
 - To get brand-new flags, delete `data/secret` (or the volume) and restart. You can also set `FLAG_SECRET`.
 - Stop the app with `docker compose down`. Add `-v` to wipe progress too.

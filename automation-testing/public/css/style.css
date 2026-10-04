@@ -75,6 +75,7 @@ button, .btn {
   color: var(--accent-text); padding: .45rem .95rem; border-radius: 8px; text-decoration: none; display: inline-block;
 }
 button.secondary { background: transparent; color: var(--accent); }
+button.danger { background: var(--err); border-color: var(--err); color: var(--surface); }
 button:disabled { opacity: .45; cursor: not-allowed; }
 
 input, select {
@@ -118,6 +119,17 @@ iframe { width: 100%; border: 2px dashed var(--border); border-radius: 8px; back
 #flag-status.ok { color: var(--ok); }
 #flag-status.err { color: var(--err); }
 .muted { color: var(--muted); }
+.progress-row { justify-content: space-between; margin-bottom: 1rem; }
+.progress-row p { margin: 0; }
+.progress-row [hidden] { display: none; }
+#reset-ask { flex-wrap: nowrap; }
+#reset-ask button { white-space: nowrap; }
+/* Pinned to the right of the "Hints" line so an opened hint list keeps the full card width. */
+.grid .card .card-foot { position: relative; }
+.grid .card .reset-one {
+  position: absolute; top: 0; right: 0;
+  font-size: .75rem; padding: .1rem .5rem; border-radius: 999px;
+}
 
 /* Frames get a compact body */
 body.frame { padding: .75rem; background: var(--surface); }

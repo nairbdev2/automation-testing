@@ -107,6 +107,15 @@ app.post('/api/reset', (req, res) => {
   res.json({ ok: true });
 });
 
+app.post('/api/reset/:id', (req, res) => {
+  const c = findChallenge(req, res);
+  if (!c) return;
+  const progress = store.loadProgress();
+  delete progress.solved[c.id];
+  store.saveProgress(progress);
+  res.json({ ok: true, id: c.id, title: c.title });
+});
+
 app.use(express.static(path.join(__dirname, '..', 'public'), { extensions: ['html'] }));
 
 app.use((err, req, res, next) => {
