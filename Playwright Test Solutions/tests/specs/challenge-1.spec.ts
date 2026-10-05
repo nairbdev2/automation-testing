@@ -38,6 +38,8 @@ test.describe('Challenge 1', () => {
         await test.step('Get login flag', async () => {
             flag = await Login_page.get_login_flag()
             console.log(flag)
+            await page.waitForTimeout(2*1000);
+            expect(page.getByText('Solved! Your flag')).toBeVisible();
         })
     })
 

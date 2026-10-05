@@ -10,7 +10,14 @@ export default defineConfig({
   tsconfig: './tsconfig.json',
 
   testDir: './tests',
-  testMatch: '**/specs/challenge-1.spec.ts',
+  
+  // Add Spec TS files here to run for 'npx playwright test' or 'npm test'
+  testMatch: ['**/specs/challenge-1.spec.ts', 
+    '**/specs/challenge-2.spec.ts',
+    '**/specs/challenge-3.spec.ts',
+  ],
+
+
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
