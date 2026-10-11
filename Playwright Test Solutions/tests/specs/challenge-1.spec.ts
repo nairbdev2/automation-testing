@@ -47,7 +47,7 @@ test.describe('Challenge 1', () => {
 
         await test.step('open default page', async () => {
             await Page.open('')
-            await page.waitForTimeout(1*1000)
+            await page.waitForTimeout(2*1000)
         })
 
         await test.step('Submit login flag', async () => {

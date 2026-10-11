@@ -15,6 +15,8 @@ export default defineConfig({
   testMatch: ['**/specs/challenge-1.spec.ts', 
     '**/specs/challenge-2.spec.ts',
     '**/specs/challenge-3.spec.ts',
+    '**/specs/challenge-4.spec.ts',
+    '**/specs/challenge-5.spec.ts'
   ],
 
 

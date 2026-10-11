@@ -71,8 +71,8 @@ export class spreadsheetHunt_page extends Pages {
 
         let pageCounter = 1;
 
-        console.log(`Next visible: ${await next_button.isVisible()}`);
-        console.log(`Next enabled: ${await next_button.isEnabled()}`);
+        //console.log(`Next visible: ${await next_button.isVisible()}`);
+        //console.log(`Next enabled: ${await next_button.isEnabled()}`);
 
         // Loop through all Pages until Next button is no longer visible or enabled
         while (await next_button.isVisible() && await next_button.isEnabled()) {
@@ -81,7 +81,7 @@ export class spreadsheetHunt_page extends Pages {
             // Call get_total function to iterate
             totalSum += await this.get_total();
 
-            console.log(`Page ${pageCounter}: ${totalSum}`);
+            //console.log(`Page ${pageCounter}: ${totalSum}`);
             pageCounter +=1;
 
             await next_button.click(); // Click on Next button

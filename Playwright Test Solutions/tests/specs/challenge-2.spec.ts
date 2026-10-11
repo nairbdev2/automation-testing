@@ -48,7 +48,7 @@ test.describe('Challenge 2', () => {
 
         await test.step('Open main page', async () => {
             await Page.open(''); //Opens Default Main Page
-            await page.waitForTimeout(1*1000); //Sleep for 1 second to allow elements to load
+            await page.waitForTimeout(2*1000); //Sleep for 1 second to allow elements to load
             expect(page.url()).toContain(''); 
         });
 

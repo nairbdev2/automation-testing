@@ -39,7 +39,7 @@ test.describe ('Challenge 3', () => {
     test ('Submit SpreadSheet Hunter Flag', async ({page}) => {
         await test.step('Open Default Page', async () => {
             await Page.open('');
-            await page.waitForTimeout(1*1000);
+            await page.waitForTimeout(2*1000);
         });
 
         await test.step('Submit Spreadsheet Hunter Flag', async () => {
