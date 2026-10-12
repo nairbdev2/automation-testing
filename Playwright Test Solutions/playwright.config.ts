@@ -12,11 +12,14 @@ export default defineConfig({
   testDir: './tests',
   
   // Add Spec TS files here to run for 'npx playwright test' or 'npm test'
-  testMatch: ['**/specs/challenge-1.spec.ts', 
+  testMatch: [
+    '**/specs/reset_all_challenges.spec.ts', 
+    '**/specs/challenge-1.spec.ts', 
     '**/specs/challenge-2.spec.ts',
     '**/specs/challenge-3.spec.ts',
     '**/specs/challenge-4.spec.ts',
-    '**/specs/challenge-5.spec.ts'
+    '**/specs/challenge-5.spec.ts',
+    '**/specs/challenge-6.spec.ts',
   ],
 
 
