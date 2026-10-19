@@ -27,14 +27,14 @@ test.describe('Challenge 5 - Paitence Grasshopper', () => {
 
 
         await test.step('Click on Claim when Ready', async() => {
-            await myPatience_Grasshoper.claim_available_button();
+            expect(await myPatience_Grasshoper.claim_available_button()).toBe(true);
         })
 
-        await test.step('Get Challenge 5 Flag', async() => {
+        await test.step('Set Challenge 5 Flag', async() => {
             flag = await myPatience_Grasshoper.get_patience_grasshopper_flag();
             console.log(flag);
-            await page.waitForTimeout(2*1000);
-            expect(page.getByText('Solved! Your flag')).toBeVisible();
+            // await page.waitForTimeout(2*1000);
+            // expect(page.getByText('Solved! Your flag')).toBeVisible();
         })
     })
 

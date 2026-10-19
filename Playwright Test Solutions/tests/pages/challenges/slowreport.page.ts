@@ -31,8 +31,8 @@ export class slow_report extends Pages {
 
     //My Functions
 
-    public async generate_submit_report() {
-
+    public async generate_submit_report(): Promise<boolean> {
+        let flagObtained = false;
         let generateReports = this.generate_report_button;
         let reportCode: string;
 
@@ -46,6 +46,16 @@ export class slow_report extends Pages {
         await this.submit_field.fill(reportCode);
         await this.submit_code_button.click();
 
+        //Flag Checker
+        try {
+            await this.page.getByText('Solved! Your flag').waitFor({state: 'visible', timeout: 5000});
+            flagObtained = true;
+        } catch {
+            flagObtained = false;
+            console.log("Failed to Set FlagObtained to TRUE.");
+        }
+        
+        return flagObtained;
     }
 
 

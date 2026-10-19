@@ -24,15 +24,15 @@ test.describe ('Challenge 3', () => {
         });
 
         await test.step('Gather Sum of all Pages based on Task Department', async () => {
-            await spreadsheethunt_page.submitTotal();
-            await page.waitForTimeout(2*1000);
+            expect(await spreadsheethunt_page.submitTotal()).toBe(true);
+            // await page.waitForTimeout(2*1000);
         });
 
-        await test.step('Get SpreadSheet Hunter Flag', async () => {
+        await test.step('Set SpreadSheet Hunter Flag', async () => {
             flag = await spreadsheethunt_page.get_spreadsheet_flag();
             console.log(flag);
-            await page.waitForTimeout(2*1000);
-            expect(page.getByText('Solved! Your flag')).toBeVisible();
+            // await page.waitForTimeout(2*1000);
+            // expect(page.getByText('Solved! Your flag')).toBeVisible();
         });
     });
 

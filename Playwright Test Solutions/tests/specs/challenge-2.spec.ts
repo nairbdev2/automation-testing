@@ -29,16 +29,16 @@ test.describe('Challenge 2', () => {
         // Click on the Shapeshifter!!
         await test.step('Click on the Shapeshifter Button', async () => {
 
-            await ShapeShift_page.shapeshifter();
+            expect(await ShapeShift_page.shapeshifter()).toBe(true);
             await page.waitForTimeout(2*1000); 
         });
 
         /** Grab the Flag */
-        await test.step('Get the Shapeshifter flag', async () => {
+        await test.step('Set the Shapeshifter flag', async () => {
             flag = await ShapeShift_page.get_shape_shifter_flag();
             console.log(flag);
-            await page.waitForTimeout(2*1000);
-            expect(page.getByText('Solved! Your flag')).toBeVisible();
+            // await page.waitForTimeout(2*1000);
+            // expect(page.getByText('Solved! Your flag')).toBeVisible();
         });
     });
 

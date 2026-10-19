@@ -41,7 +41,7 @@ export class endless_feed extends Pages {
     //Methods
     public async scroll(): Promise<boolean> {
 
-        let flagObtained= false;
+        let flagObtained = false;
         let myFeed = this.feed;
 
         //Clean Input text from Task given
@@ -81,13 +81,15 @@ export class endless_feed extends Pages {
         // console.log("What is this2: ", testValue2);
         // console.log("What is this3: ", testValue3);
         
-        //Flag Check
-        const PageCheck = await this.page.getByText('Solved! Your flag').isVisible();
-        if (PageCheck === true) {
+        //Flag Checker
+        try {
+            await this.page.getByText('Solved! Your flag').waitFor({state: 'visible', timeout: 5000});
             flagObtained = true;
-            await this.page.waitForTimeout(1*1000);
+        } catch {
+            flagObtained = false;
+            console.log("Failed to Set FlagObtained to TRUE.");
         }
-
+        
         return flagObtained;
     }
 

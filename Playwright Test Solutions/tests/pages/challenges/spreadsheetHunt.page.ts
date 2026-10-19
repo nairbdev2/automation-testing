@@ -95,11 +95,23 @@ export class spreadsheetHunt_page extends Pages {
         return totalSum;
     }
 
-    public async submitTotal(): Promise<void> {
+    public async submitTotal(): Promise<boolean> {
+        let flagObtained = false;
 
         const totalSum = await this.calculateTotal(); // Currently a Number
         await this.total_field.fill(totalSum.toString()); // Parse as toString for .fill()
         await this.submit_total_button.click();
+
+        //Flag Checker
+        try {
+            await this.page.getByText('Solved! Your flag').waitFor({state: 'visible', timeout: 5000});
+            flagObtained = true;
+        } catch {
+            flagObtained = false;
+            console.log("Failed to Set FlagObtained to TRUE.");
+        }
+        
+        return flagObtained;
         
     }
 

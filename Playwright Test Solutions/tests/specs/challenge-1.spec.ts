@@ -31,15 +31,15 @@ test.describe('Challenge 1', () => {
         })
 
         await test.step('Complete login with credentials', async () => {
-            await Login_page.login(credentials.user, credentials.pass)
-            await page.waitForTimeout(2*1000)
+            expect(await Login_page.login(credentials.user, credentials.pass)).toBe(true);
+            //await page.waitForTimeout(2*1000)
         })
 
-        await test.step('Get login flag', async () => {
+        await test.step('Set login flag', async () => {
             flag = await Login_page.get_login_flag()
             console.log(flag)
-            await page.waitForTimeout(2*1000);
-            expect(page.getByText('Solved! Your flag')).toBeVisible();
+            // await page.waitForTimeout(2*1000);
+            // expect(page.getByText('Solved! Your flag')).toBeVisible();
         })
     })
 

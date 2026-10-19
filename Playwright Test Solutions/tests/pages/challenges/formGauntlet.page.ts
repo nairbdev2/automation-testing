@@ -41,13 +41,14 @@ export class form_gauntlet extends Pages {
     // My Functions 
 
     /** Fill out the form based on the task */
-    public async fillInForm() {
+    public async fillInForm(): Promise<boolean> {
         const countryTask = (await this.country_task.innerText()).toString();
         const planTask = (await this.plan_task.innerText()).toString().toLowerCase();
         const newsletterTask = (await this.newsletter_task.innerText()).toString();
         const startDateTask = (await this.startDate_task.innerText()).toString();
         const volumeTask = (await this.volume_task.innerText()).toString();
         const favoriteColorTask = (await this.favoriteColor_task.innerText()).toString();
+        let flagObtained = false;
 
         //Set Country
         this.page.locator('select[id="country"]').selectOption({label: countryTask});
@@ -83,6 +84,16 @@ export class form_gauntlet extends Pages {
 
         // Save the settings!!
         await this.page.getByRole('button').click();
+
+        //Flag Checker
+        try {
+            await this.page.getByText('Solved! Your flag').waitFor({state: 'visible', timeout: 5000});
+            flagObtained = true;
+        } catch {
+            flagObtained = false;
+            console.log("Failed to Set FlagObtained to TRUE.");
+        }
+        return flagObtained;
 
     }
 

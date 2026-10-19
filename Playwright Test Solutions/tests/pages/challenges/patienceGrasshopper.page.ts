@@ -18,13 +18,24 @@ export class patience_grasshoper extends Pages {
 
 
     /** Click Claim Button when Available */
-    public async claim_available_button(): Promise<void> {
-
+    public async claim_available_button(): Promise<boolean> {
+        let flagObtained = false;
         const myClaimButton = this.claim_button;
 
         //If Disabled just wait using expect until Enabled to click timeout 11 seconds
         await expect(myClaimButton).toBeEnabled({timeout: 11000});
         await myClaimButton.click();
+
+        //Flag Checker
+        try {
+            await this.page.getByText('Solved! Your flag').waitFor({state: 'visible', timeout: 5000});
+            flagObtained = true;
+        } catch {
+            flagObtained = false;
+            console.log("Failed to Set FlagObtained to TRUE.");
+        }
+        
+        return flagObtained;
     }
 
     public async get_patience_grasshopper_flag(): Promise<string> {

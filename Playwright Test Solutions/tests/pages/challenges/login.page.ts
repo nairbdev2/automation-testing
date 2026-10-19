@@ -45,10 +45,24 @@ export class login_page extends Pages {
     }
 
     /** Logs in using the provided username and password on the login challenge page */
-    public async login(user: string, pass: string): Promise<void> {
+    public async login(user: string, pass: string): Promise<boolean> {
+        let flagObtained = false;
+
         await this.username_field.fill(user)
         await this.password_field.fill(pass)
         await this.sign_in_button.click()
+
+
+        //Flag Checker
+        try {
+            await this.page.getByText('Solved! Your flag').waitFor({state: 'visible', timeout: 5000});
+            flagObtained = true;
+        } catch {
+            flagObtained = false;
+            console.log("Failed to Set FlagObtained to TRUE.");
+        }
+        
+        return flagObtained;
     }
 
     /** Retrieves the login flag displayed on the login challenge page */

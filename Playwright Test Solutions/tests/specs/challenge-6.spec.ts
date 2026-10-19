@@ -26,14 +26,14 @@ test.describe('Challenge 6 - Slow Report', () => {
         })
 
         await test.step('Run the Report and Submit after waiting!', async() => {
-            await mySlowReport.generate_submit_report();
+            expect(await mySlowReport.generate_submit_report()).toBe(true);
         })
 
-        await test.step('Get the Challenge 6 Flag', async () => {
+        await test.step('Set the Challenge 6 Flag', async () => {
             flag = await mySlowReport.get_slow_report_flag();
             console.log(flag);
-            await page.waitForTimeout(2*1000);
-            expect(page.getByText('Solved! Your flag')).toBeVisible();
+            // await page.waitForTimeout(2*1000);
+            // expect(page.getByText('Solved! Your flag')).toBeVisible();
         })
     })
 

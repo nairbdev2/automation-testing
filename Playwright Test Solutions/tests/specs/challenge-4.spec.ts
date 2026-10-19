@@ -30,15 +30,15 @@ test.describe ('Challenge 4 - Form Gauntlet', () => {
         });
 
         await test.step ('Complete the form with the given task', async() =>{
-            await formGauntlet.fillInForm();
-            await page.waitForTimeout(2*1000);
+            expect (await formGauntlet.fillInForm()).toBe(true);
+            //await page.waitForTimeout(2*1000);
         });
 
-        await test.step('Get Form Gauntlet Flag', async() => {
+        await test.step('Set Form Gauntlet Flag', async() => {
             flag = await formGauntlet.get_formGauntlet_flag();
             console.log(flag);
-            await page.waitForTimeout(2*1000);
-            expect(page.getByText('Solved! Your Flag')).toBeVisible();
+            //await page.waitForTimeout(2*1000);
+            //expect(page.getByText('Solved! Your Flag')).toBeVisible();
         });
     });
 
