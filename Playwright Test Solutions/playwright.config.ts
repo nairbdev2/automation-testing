@@ -23,7 +23,8 @@ export default defineConfig({
     // '**/specs/challenge-7.spec.ts',
     // '**/specs/challenge-8.spec.ts',
     // '**/specs/challenge-9.spec.ts',
-    '**/specs/challenge-10.spec.ts',              
+    // '**/specs/challenge-10.spec.ts',
+    '**/specs/challenge-11.spec.ts',                     
   ],
 
 
