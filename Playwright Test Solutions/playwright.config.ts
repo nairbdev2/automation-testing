@@ -13,13 +13,17 @@ export default defineConfig({
   
   // Add Spec TS files here to run for 'npx playwright test' or 'npm test'
   testMatch: [
-    '**/specs/reset_all_challenges.spec.ts', 
-    '**/specs/challenge-1.spec.ts', 
-    '**/specs/challenge-2.spec.ts',
-    '**/specs/challenge-3.spec.ts',
-    '**/specs/challenge-4.spec.ts',
-    '**/specs/challenge-5.spec.ts',
-    '**/specs/challenge-6.spec.ts',
+    // '**/specs/reset_all_challenges.spec.ts', 
+    // '**/specs/challenge-1.spec.ts', 
+    // '**/specs/challenge-2.spec.ts',
+    // '**/specs/challenge-3.spec.ts',
+    // '**/specs/challenge-4.spec.ts',
+    // '**/specs/challenge-5.spec.ts',
+    // '**/specs/challenge-6.spec.ts',
+    // '**/specs/challenge-7.spec.ts',
+    // '**/specs/challenge-8.spec.ts',
+    // '**/specs/challenge-9.spec.ts',
+    '**/specs/challenge-10.spec.ts',              
   ],
 
 
